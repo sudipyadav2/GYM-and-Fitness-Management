@@ -1,40 +1,44 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./AuthContext";
-
+import { AuthProvider } from "./AuthContext";
+import Navbar from "./Componenet/Navbar";
+import Footer from "./Componenet/Footer";
+/* Member Pages */
 import MemberRegistration from "./Member Management/MemberRegistration";
 import Login from "./Member Management/MemberLogin";
 import Dashboard from "./Member Management/Memberdashboard";
 import Homepage from "./Member Management/Homepage";
 
+/* Admin Pages */
 import AdminLogin from "./Admin/AdminLogin";
 import AdminDashboard from "./Admin/AdminDashboard";
-import ProtectedRoute from "../../Class Activity and Schedule/ProtectedRoute";
-import Admin from "../../Class Activity and Schedule/Admin";
-import ClassAttendance from "../../Class Activity and Schedule/ClassAttendance";
-import ClassCategories from "../../Class Activity and Schedule/ClassCategories";
-import Classes from "../../Class Activity and Schedule/Classes";
-import ClassNotifications from "../../Class Activity and Schedule/ClassNotification";
-import ClassRegistration from "../../Class Activity and Schedule/ClassRegistration";
-import Schedule from "../../Class Activity and Schedule/Schedule";
-import ViewClasses from "../../Class Activity and Schedule/Viewclasses";
-const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
 
-  return user ? children : <Navigate to="/login" replace />;
-};
+import ProtectedRoute from "./ClassActivityAndSchedule/ProtectedRoute";
+import AdminRoute from "./ClassActivityAndSchedule/Admin";
+
+import Viewclasses from "./ClassActivityAndSchedule/Viewclasses";
+import ClassRegistration from "./ClassActivityAndSchedule/ClassRegistration";
+import ClassAttendance from "./ClassActivityAndSchedule/ClassAttendance";
+import ClassNotifications from "./ClassActivityAndSchedule/ClassNotification";
+
+import ClassCategories from "./ClassActivityAndSchedule/ClassCategories";
+import Classes from "./ClassActivityAndSchedule/Classes";
+import Schedule from "./ClassActivityAndSchedule/Schedule";
+
 
 function App() {
   return (
     <AuthProvider>
       <Router>
+        <Navbar />
         <Routes>
-
-          {/* Homepage */}
+       
+        
           <Route path="/" element={<Homepage />} />
 
-          {/* Member */}
+     
           <Route path="/register" element={<MemberRegistration />} />
           <Route path="/login" element={<Login />} />
+
           <Route
             path="/dashboard"
             element={
@@ -44,7 +48,7 @@ function App() {
             }
           />
 
-        
+          
           <Route
             path="/classes"
             element={
@@ -83,45 +87,49 @@ function App() {
 
           {/* Admin */}
           <Route path="/admin/login" element={<AdminLogin />} />
+
           <Route
             path="/admin/dashboard"
             element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <AdminDashboard />
-              </ProtectedRoute>
+              </AdminRoute>
             }
           />
-          
+
+          {/* Sprint B Admin Routes */}
           <Route
             path="/admin/class-categories"
             element={
-              <Admin>
+              <AdminRoute>
                 <ClassCategories />
-              </Admin>
+              </AdminRoute>
             }
           />
 
           <Route
             path="/admin/classes"
             element={
-              <Admin>
+              <AdminRoute>
                 <Classes />
-              </Admin>
+              </AdminRoute>
             }
           />
 
           <Route
             path="/admin/class-schedule"
             element={
-              <Admin>
+              <AdminRoute>
                 <Schedule />
-              </Admin>
+              </AdminRoute>
             }
           />
+
           {/* Default fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>
+        <Footer />
       </Router>
     </AuthProvider>
   );

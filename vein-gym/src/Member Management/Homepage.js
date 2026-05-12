@@ -143,11 +143,7 @@ export default function Homepage() {
       </Parallax>
 
     
-      <Box sx={{ py: 4, textAlign: "center", background: "#111" }}>
-        <Typography sx={{ color: "#B3B3B3" }}>
-          © {new Date().getFullYear()}  Gym. All rights reserved.
-        </Typography>
-      </Box>
+    
     </>
   );
 }

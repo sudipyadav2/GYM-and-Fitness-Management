@@ -4,7 +4,7 @@ import { db } from "../Firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-export default function Admin({ children }) {
+export default function AdminRoute({ children }) {
   const { user, loading } = useAuth();
   const [role, setRole] = useState(null);
   const [checking, setChecking] = useState(true);

@@ -1,7 +1,45 @@
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
-import { Link } from "react-scroll";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Avatar,
+  IconButton,
+  Menu,
+  MenuItem,
+  Badge
+} from "@mui/material";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useState } from "react";
+import { useAuth } from "../AuthContext";
 
 export default function Navbar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  /* PROFILE MENU */
+  const [profileMenu, setProfileMenu] = useState(null);
+  const openProfile = Boolean(profileMenu);
+
+  const handleProfileOpen = (e) => setProfileMenu(e.currentTarget);
+  const handleProfileClose = () => setProfileMenu(null);
+
+  /* NOTIFICATION MENU */
+  const [notifMenu, setNotifMenu] = useState(null);
+  const openNotif = Boolean(notifMenu);
+
+  const handleNotifOpen = (e) => setNotifMenu(e.currentTarget);
+  const handleNotifClose = () => setNotifMenu(null);
+
+  /* LOGOUT */
+  const handleLogout = () => {
+    logout();
+    handleProfileClose();
+    navigate("/login");
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -13,42 +51,135 @@ export default function Navbar() {
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         
-        {/* LOGO / BRAND */}
+        
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
-          Premium Gym
+          Vein Gym
         </Typography>
 
-        {/* NAV LINKS */}
-        <Box>
-          <Button color="inherit">
-            <Link to="hero" smooth={true} duration={600} offset={-70}>
-              Home
-            </Link>
+        <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
+          <Button component={RouterLink} to="/" sx={{ color: "white" }}>
+            Home
           </Button>
 
-          <Button color="inherit">
-            <Link to="features" smooth={true} duration={600} offset={-70}>
-              Features
-            </Link>
+          <Button component={RouterLink} to="/classes" sx={{ color: "white" }}>
+            Classes
           </Button>
 
-          <Button color="inherit">
-            <Link to="classes" smooth={true} duration={600} offset={-70}>
-              Classes
-            </Link>
+          <Button component={RouterLink} to="/dashboard" sx={{ color: "white" }}>
+            Dashboard
           </Button>
 
-          <Button color="inherit">
-            <Link to="trainers" smooth={true} duration={600} offset={-70}>
-              Trainers
-            </Link>
-          </Button>
+          
+          {!user ? (
+            <>
+            <Button
+              component={RouterLink}
+              to="/login"
+              sx={{
+                background: "#00e5ff",
+                color: "black",
+                fontWeight: 700,
+                paddingX: 3,
+                borderRadius: "25px",
+                "&:hover": { background: "#00bcd4" }
+              }}
+            >
+              Login
+            </Button>
 
-          <Button color="inherit">
-            <Link to="footer" smooth={true} duration={600} offset={-70}>
-              Contact
-            </Link>
-          </Button>
+        
+            <Button
+              component={RouterLink}
+              to="/admin/login"
+              sx={{
+                background: "#ff1744",
+                color: "white",
+                fontWeight: 700,
+                paddingX: 3,
+                borderRadius: "25px",
+                ml: 2,
+                "&:hover": { background: "#d50000" }
+      }}
+    >
+      Admin Login
+    </Button>
+  
+          </>
+          ) : (
+            <>
+             
+              <IconButton onClick={handleNotifOpen} sx={{ color: "white" }}>
+                <Badge badgeContent={3} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+
+              <Menu
+                anchorEl={notifMenu}
+                open={openNotif}
+                onClose={handleNotifClose}
+                PaperProps={{
+                  sx: {
+                    background: "rgba(0,0,0,0.85)",
+                    backdropFilter: "blur(10px)",
+                    color: "white"
+                  }
+                }}
+              >
+                <MenuItem onClick={handleNotifClose}>New class added</MenuItem>
+                <MenuItem onClick={handleNotifClose}>Membership reminder</MenuItem>
+                <MenuItem onClick={handleNotifClose}>Trainer message</MenuItem>
+              </Menu>
+
+              {/* PROFILE AVATAR */}
+              <IconButton onClick={handleProfileOpen}>
+                <Avatar
+                  src={user.photoURL || ""}
+                  sx={{
+                    bgcolor: "#00e5ff",
+                    color: "black",
+                    fontWeight: 700
+                  }}
+                >
+                  {!user.photoURL && user.email?.charAt(0).toUpperCase()}
+                </Avatar>
+              </IconButton>
+
+              {/* PROFILE DROPDOWN */}
+              <Menu
+                anchorEl={profileMenu}
+                open={openProfile}
+                onClose={handleProfileClose}
+                PaperProps={{
+                  sx: {
+                    background: "rgba(0,0,0,0.85)",
+                    backdropFilter: "blur(10px)",
+                    color: "white"
+                  }
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    handleProfileClose();
+                    navigate("/dashboard");
+                  }}
+                >
+                  Profile
+                </MenuItem>
+
+                <MenuItem
+                  onClick={() => {
+                    handleProfileClose();
+                    navigate("/classes");
+                  }}
+                >
+                  My Classes
+                </MenuItem>
+
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </>
+          )}
         </Box>
 
       </Toolbar>
