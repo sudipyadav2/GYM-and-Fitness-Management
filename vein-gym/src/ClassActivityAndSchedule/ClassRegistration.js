@@ -17,15 +17,16 @@ export default function ClassRegistration() {
   const [classInfo, setClassInfo] = useState(null);
   const [message, setMessage] = useState("");
 
+  useEffect( () => {
   const fetchClass = async () => {
     const snap = await getDocs(collection(db, "classes"));
     const cls = snap.docs.find((d) => d.id === id);
     if (cls) setClassInfo({ id: cls.id, ...cls.data() });
   };
 
-  useEffect(() => {
+  
     fetchClass();
-  }, []);
+  }, [id]);
 
   const register = async () => {
     const q = query(
@@ -56,7 +57,7 @@ export default function ClassRegistration() {
     <div style={{ padding: "20px" }}>
       <h2>Register for {classInfo.name}</h2>
       <p>Category: {classInfo.category}</p>
-      <p>Instructor: {classInfo.instructor}</p>
+      <p>Trainer: {classInfo.Trainer}</p>
       <p>{classInfo.description}</p>
 
       <button onClick={register}>Confirm Registration</button>
