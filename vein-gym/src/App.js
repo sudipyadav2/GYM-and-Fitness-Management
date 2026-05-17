@@ -30,6 +30,7 @@ function App() {
     <AuthProvider>
       <Router>
         <Navbar />
+        <div className="page-wrapper">
         <Routes>
        
         
@@ -97,7 +98,7 @@ function App() {
             }
           />
 
-          {/* Sprint B Admin Routes */}
+         
           <Route
             path="/admin/class-categories"
             element={
@@ -127,8 +128,10 @@ function App() {
 
           {/* Default fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
-
+        
+       
         </Routes>
+        </div>
         <Footer />
       </Router>
     </AuthProvider>

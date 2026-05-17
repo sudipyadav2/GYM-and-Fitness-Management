@@ -27,43 +27,135 @@ export default function ViewClasses() {
     ? classes.filter((c) => c.category === filter)
     : classes;
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>Available Classes</h2>
+  const getCategory = (name) =>
+    categories.find((c) => c.name === name) || {};
 
-      <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+  return (
+    <div style={{ padding: "30px" }}>
+      <h2 style={{ marginBottom: "20px" }}>All Classes</h2>
+
+      {/* FILTER */}
+      <select
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        style={{
+          padding: "10px",
+          marginBottom: "20px",
+          borderRadius: "5px",
+          border: "1px solid #ccc"
+        }}
+      >
         <option value="">All Categories</option>
         {categories.map((c) => (
-          <option key={c.id} value={c.name}>{c.name}</option>
+          <option key={c.id} value={c.name}>
+            {c.name}
+          </option>
         ))}
       </select>
 
-      <ul>
+      {/* GRID */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+          gap: "25px"
+        }}
+      >
         {filteredClasses.map((cls) => {
+          const cat = getCategory(cls.category);
           const classSchedule = schedule.filter((s) => s.classId === cls.id);
 
           return (
-            <li key={cls.id} style={{ marginTop: "15px" }}>
-              <strong>{cls.name}</strong> — {cls.category}
-              <p>{cls.description}</p>
-              <p>Instructor: {cls.instructor}</p>
+            <div
+              key={cls.id}
+              style={{
+                border: "1px solid #ddd",
+                borderRadius: "12px",
+                overflow: "hidden",
+                background: "white",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                transition: "0.3s",
+                cursor: "pointer"
+              }}
+            >
+              {/* IMAGE */}
+              <img
+                src={cat.image}
+                alt={cls.name}
+                style={{
+                  width: "100%",
+                  height: "180px",
+                  objectFit: "cover"
+                }}
+              />
 
-              <p>
-                <strong>Schedule:</strong>
-                {classSchedule.length === 0
-                  ? " No schedule yet"
-                  : classSchedule.map((s) => (
-                      <span key={s.id}> {s.date} at {s.time} </span>
-                    ))}
-              </p>
+              <div style={{ padding: "15px" }}>
+                {/* CLASS NAME */}
+                <h3 style={{ margin: "0 0 10px 0" }}>{cls.name}</h3>
 
-              <Link to={`/class/register/${cls.id}`}>
-                <button>Register</button>
-              </Link>
-            </li>
+                {/* TAGS */}
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: "8px",
+                    marginBottom: "10px"
+                  }}
+                >
+                  {cat.tags?.map((t) => (
+                    <span
+                      key={t}
+                      style={{
+                        padding: "5px 10px",
+                        background: "#f0f0f0",
+                        borderRadius: "15px",
+                        fontSize: "12px"
+                      }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+
+                {/* TRAINER */}
+                <p style={{ margin: "5px 0" }}>
+                  <strong>Trainer:</strong> {cls.trainer}
+                </p>
+
+                {/* SCHEDULE */}
+                <p style={{ margin: "5px 0" }}>
+                  <strong>Schedule:</strong>{" "}
+                  {classSchedule.length === 0
+                    ? "No schedule yet"
+                    : classSchedule.map((s) => (
+                        <span key={s.id}>
+                          {s.date} at {s.time}{" "}
+                        </span>
+                      ))}
+                </p>
+
+                {/* REGISTER BUTTON */}
+                <Link to={`/class/register/${cls.id}`}>
+                  <button
+                    style={{
+                      marginTop: "10px",
+                      width: "100%",
+                      padding: "10px",
+                      background: "#00e5ff",
+                      border: "none",
+                      borderRadius: "5px",
+                      fontWeight: "bold",
+                      cursor: "pointer"
+                    }}
+                  >
+                    View / Register
+                  </button>
+                </Link>
+              </div>
+            </div>
           );
         })}
-      </ul>
+      </div>
     </div>
   );
 }

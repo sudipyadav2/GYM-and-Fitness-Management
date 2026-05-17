@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useAuth } from "../AuthContext";
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, role, logout } = useAuth();   // ⭐ role added here
   const navigate = useNavigate();
 
   /* PROFILE MENU */
@@ -51,63 +51,90 @@ export default function Navbar() {
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         
-        
+        {/* LOGO */}
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
           Vein Gym
         </Typography>
 
+        {/* NAVIGATION */}
         <Box sx={{ display: "flex", gap: 3, alignItems: "center" }}>
+          
+          {/* ALWAYS VISIBLE */}
           <Button component={RouterLink} to="/" sx={{ color: "white" }}>
             Home
           </Button>
 
-          <Button component={RouterLink} to="/classes" sx={{ color: "white" }}>
-            Classes
-          </Button>
-
-          <Button component={RouterLink} to="/dashboard" sx={{ color: "white" }}>
-            Dashboard
-          </Button>
-
-          
+          {/* ROLE‑BASED NAVIGATION */}
           {!user ? (
             <>
-            <Button
-              component={RouterLink}
-              to="/login"
-              sx={{
-                background: "#00e5ff",
-                color: "black",
-                fontWeight: 700,
-                paddingX: 3,
-                borderRadius: "25px",
-                "&:hover": { background: "#00bcd4" }
-              }}
-            >
-              Login
-            </Button>
+              {/* MEMBER LOGIN */}
+              <Button
+                component={RouterLink}
+                to="/login"
+                sx={{
+                  background: "#00e5ff",
+                  color: "black",
+                  fontWeight: 700,
+                  paddingX: 3,
+                  borderRadius: "25px",
+                  "&:hover": { background: "#00bcd4" }
+                }}
+              >
+                Login
+              </Button>
 
-        
-            <Button
-              component={RouterLink}
-              to="/admin/login"
-              sx={{
-                background: "#ff1744",
-                color: "white",
-                fontWeight: 700,
-                paddingX: 3,
-                borderRadius: "25px",
-                ml: 2,
-                "&:hover": { background: "#d50000" }
-      }}
-    >
-      Admin Login
-    </Button>
-  
-          </>
+              {/* ADMIN LOGIN */}
+              <Button
+                component={RouterLink}
+                to="/admin/login"
+                sx={{
+                  background: "#ff1744",
+                  color: "white",
+                  fontWeight: 700,
+                  paddingX: 3,
+                  borderRadius: "25px",
+                  ml: 2,
+                  "&:hover": { background: "#d50000" }
+                }}
+              >
+                Admin Login
+              </Button>
+            </>
+          ) : role === "admin" ? (
+            <>
+              {/* ADMIN NAVIGATION */}
+              <Button component={RouterLink} to="/admin/dashboard" sx={{ color: "white" }}>
+                Admin Dashboard
+              </Button>
+
+              <Button component={RouterLink} to="/admin/class-categories" sx={{ color: "white" }}>
+                Categories
+              </Button>
+
+              <Button component={RouterLink} to="/admin/classes" sx={{ color: "white" }}>
+                Classes
+              </Button>
+
+              <Button component={RouterLink} to="/admin/class-schedule" sx={{ color: "white" }}>
+                Schedule
+              </Button>
+
+              <Button onClick={handleLogout} sx={{ color: "white" }}>
+                Logout
+              </Button>
+            </>
           ) : (
             <>
-             
+              {/* MEMBER NAVIGATION */}
+              <Button component={RouterLink} to="/classes" sx={{ color: "white" }}>
+                Classes
+              </Button>
+
+              <Button component={RouterLink} to="/dashboard" sx={{ color: "white" }}>
+                Dashboard
+              </Button>
+
+              {/* NOTIFICATIONS */}
               <IconButton onClick={handleNotifOpen} sx={{ color: "white" }}>
                 <Badge badgeContent={3} color="error">
                   <NotificationsIcon />
@@ -131,7 +158,7 @@ export default function Navbar() {
                 <MenuItem onClick={handleNotifClose}>Trainer message</MenuItem>
               </Menu>
 
-              {/* PROFILE AVATAR */}
+              {/* PROFILE */}
               <IconButton onClick={handleProfileOpen}>
                 <Avatar
                   src={user.photoURL || ""}
@@ -145,7 +172,6 @@ export default function Navbar() {
                 </Avatar>
               </IconButton>
 
-              {/* PROFILE DROPDOWN */}
               <Menu
                 anchorEl={profileMenu}
                 open={openProfile}
