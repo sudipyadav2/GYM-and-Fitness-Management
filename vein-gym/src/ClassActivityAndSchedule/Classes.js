@@ -16,7 +16,7 @@ export default function Classes() {
   const [form, setForm] = useState({
     name: "",
     category: "",
-    instructor: "",
+    trainer: "",
     capacity: "",
     description: ""
   });
@@ -44,14 +44,14 @@ export default function Classes() {
 
   const addClass = async () => {
     await addDoc(collection(db, "classes"), form);
-    setForm({ name: "", category: "", instructor: "", capacity: "", description: "" });
+    setForm({ name: "", category: "", trainer: "", capacity: "", description: "" });
     fetchClasses();
   };
 
   const updateClass = async () => {
     await updateDoc(doc(db, "classes", editingId), form);
     setEditingId(null);
-    setForm({ name: "", category: "", instructor: "", capacity: "", description: "" });
+    setForm({ name: "", category: "", trainer: "", capacity: "", description: "" });
     fetchClasses();
   };
 
@@ -72,7 +72,7 @@ export default function Classes() {
             <option key={c.id} value={c.name}>{c.name}</option>
           ))}
         </select>
-        <input name="instructor" placeholder="Instructor" value={form.instructor} onChange={handleChange} />
+        <input name="trainer" placeholder="Trainer" value={form.trainer} onChange={handleChange} />
         <input name="capacity" placeholder="Capacity" value={form.capacity} onChange={handleChange} />
         <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} />
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { db } from "../Firebase";
+import { db, storage } from "../Firebase";
 import {
   collection,
   addDoc,
@@ -8,6 +8,7 @@ import {
   deleteDoc,
   doc
 } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const TAG_OPTIONS = [
   "Strength",
@@ -24,7 +25,7 @@ export default function ClassCategories() {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({
     name: "",
-    image: "",
+    imageFile: null,
     tags: []
   });
 
@@ -49,17 +50,40 @@ export default function ClassCategories() {
     }));
   };
 
+  const uploadImage = async (file) => {
+    const storageRef = ref(storage, `classCategories/${Date.now()}_${file.name}`);
+    await uploadBytes(storageRef, file);
+    return await getDownloadURL(storageRef);
+  };
+
   const addCategory = async () => {
-    if (!newCategory.name.trim() || !newCategory.image.trim()) return;
+    if (!newCategory.name.trim() || !newCategory.imageFile) return;
 
-    await addDoc(collection(db, "classCategories"), newCategory);
+    const imageUrl = await uploadImage(newCategory.imageFile);
 
-    setNewCategory({ name: "", image: "", tags: [] });
+    await addDoc(collection(db, "classCategories"), {
+      name: newCategory.name,
+      image: imageUrl,
+      tags: newCategory.tags
+    });
+
+    setNewCategory({ name: "", imageFile: null, tags: [] });
     fetchCategories();
   };
 
   const updateCategory = async () => {
-    await updateDoc(doc(db, "classCategories", editing.id), editing);
+    let imageUrl = editing.image;
+
+    if (editing.imageFile) {
+      imageUrl = await uploadImage(editing.imageFile);
+    }
+
+    await updateDoc(doc(db, "classCategories", editing.id), {
+      name: editing.name,
+      image: imageUrl,
+      tags: editing.tags
+    });
+
     setEditing(null);
     fetchCategories();
   };
@@ -95,13 +119,12 @@ export default function ClassCategories() {
         />
 
         <input
-          type="text"
-          placeholder="Image URL"
-          value={newCategory.image}
+          type="file"
+          accept="image/*"
           onChange={(e) =>
-            setNewCategory({ ...newCategory, image: e.target.value })
+            setNewCategory({ ...newCategory, imageFile: e.target.files[0] })
           }
-          style={{ width: "100%", padding: "10px", marginBottom: "10px" }}
+          style={{ marginBottom: "10px" }}
         />
 
         <p>Tags:</p>
@@ -168,11 +191,15 @@ export default function ClassCategories() {
                 />
 
                 <input
-                  value={editing.image}
+                  type="file"
+                  accept="image/*"
                   onChange={(e) =>
-                    setEditing({ ...editing, image: e.target.value })
+                    setEditing({
+                      ...editing,
+                      imageFile: e.target.files[0]
+                    })
                   }
-                  style={{ width: "100%", marginBottom: "10px" }}
+                  style={{ marginBottom: "10px" }}
                 />
 
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
