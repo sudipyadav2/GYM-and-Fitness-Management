@@ -19,43 +19,23 @@ export default function ClassRegistration() {
   const [category, setCategory] = useState(null);
   const [schedule, setSchedule] = useState([]);
   const [message, setMessage] = useState("");
-  const [isRegistered, setIsRegistered] = useState(false);
+
+  const fetchClass = async () => {
+    const snap = await getDocs(collection(db, "classes"));
+    const cls = snap.docs.find((d) => d.id === id);
+    if (cls) setClassInfo({ id: cls.id, ...cls.data() });
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      // Load class
-      const classSnap = await getDocs(collection(db, "classes"));
-      const cls = classSnap.docs.find((d) => d.id === id);
+    fetchClass();
+  }, []);
 
-      if (!cls) return;
-
-      const classData = { id: cls.id, ...cls.data() };
-      setClassInfo(classData);
-
-      // Load category
-      const catSnap = await getDocs(collection(db, "classCategories"));
-      const cat = catSnap.docs
-        .map((d) => ({ id: d.id, ...d.data() }))
-        .find((c) => c.name === classData.category);
-
-      setCategory(cat);
-
-      // Load schedule
-      const scheduleSnap = await getDocs(collection(db, "classSchedule"));
-      const classSchedule = scheduleSnap.docs
-        .map((d) => ({ id: d.id, ...d.data() }))
-        .filter((s) => s.classId === id);
-
-      setSchedule(classSchedule);
-
-      // Check if user already registered
-      const regSnap = await getDocs(
-        query(
-          collection(db, "classRegistrations"),
-          where("classId", "==", id),
-          where("userId", "==", user.uid)
-        )
-      );
+  const register = async () => {
+    const q = query(
+      collection(db, "classRegistrations"),
+      where("classId", "==", id),
+      where("userId", "==", user.uid)
+    );
 
       setIsRegistered(!regSnap.empty);
     };
@@ -123,46 +103,10 @@ export default function ClassRegistration() {
   if (!classInfo || !category) return <p>Loading...</p>;
 
   return (
-    <div style={{ padding: "30px", maxWidth: "700px", margin: "auto" }}>
-      {/* IMAGE */}
-      <img
-        src={category.image}
-        alt={classInfo.name}
-        style={{
-          width: "100%",
-          height: "250px",
-          objectFit: "cover",
-          borderRadius: "12px",
-          marginBottom: "20px"
-        }}
-      />
-
-      {/* CLASS NAME */}
-      <h2>{classInfo.name}</h2>
-
-      {/* TAGS */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
-        {category.tags?.map((t) => (
-          <span
-            key={t}
-            style={{
-              padding: "6px 12px",
-              background: "#f0f0f0",
-              borderRadius: "20px",
-              fontSize: "12px"
-            }}
-          >
-            {t}
-          </span>
-        ))}
-      </div>
-
-      {/* TRAINER */}
-      <p>
-        <strong>Trainer:</strong> {classInfo.trainer}
-      </p>
-
-      {/* DESCRIPTION */}
+    <div style={{ padding: "20px" }}>
+      <h2>Register for {classInfo.name}</h2>
+      <p>Category: {classInfo.category}</p>
+      <p>Instructor: {classInfo.instructor}</p>
       <p>{classInfo.description}</p>
 
       {/* SCHEDULE */}
