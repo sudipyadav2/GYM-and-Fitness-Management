@@ -125,86 +125,121 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              {/* MEMBER NAVIGATION */}
-              <Button component={RouterLink} to="/classes" sx={{ color: "white" }}>
-                Classes
-              </Button>
+  {/* MEMBER NAVIGATION */}
+  <Button component={RouterLink} to="/classes" sx={{ color: "white" }}>
+    Classes
+  </Button>
 
-              <Button component={RouterLink} to="/dashboard" sx={{ color: "white" }}>
-                Dashboard
-              </Button>
+  <Button component={RouterLink} to="/trainers" sx={{ color: "white" }}>
+    Trainers
+  </Button>
 
-              {/* NOTIFICATIONS */}
-              <IconButton onClick={handleNotifOpen} sx={{ color: "white" }}>
-                <Badge badgeContent={3} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+  <Button component={RouterLink} to="/class/attendance" sx={{ color: "white" }}>
+    Attendance
+  </Button>
 
-              <Menu
-                anchorEl={notifMenu}
-                open={openNotif}
-                onClose={handleNotifClose}
-                PaperProps={{
-                  sx: {
-                    background: "rgba(0,0,0,0.85)",
-                    backdropFilter: "blur(10px)",
-                    color: "white"
-                  }
-                }}
-              >
-                <MenuItem onClick={handleNotifClose}>New class added</MenuItem>
-                <MenuItem onClick={handleNotifClose}>Membership reminder</MenuItem>
-                <MenuItem onClick={handleNotifClose}>Trainer message</MenuItem>
-              </Menu>
+  <Button component={RouterLink} to="/class/notifications" sx={{ color: "white" }}>
+    Alerts
+  </Button>
 
-              {/* PROFILE */}
-              <IconButton onClick={handleProfileOpen}>
-                <Avatar
-                  src={user.photoURL || ""}
-                  sx={{
-                    bgcolor: "#00e5ff",
-                    color: "black",
-                    fontWeight: 700
-                  }}
-                >
-                  {!user.photoURL && user.email?.charAt(0).toUpperCase()}
-                </Avatar>
-              </IconButton>
+  <Button component={RouterLink} to="/dashboard" sx={{ color: "white" }}>
+    Dashboard
+  </Button>
 
-              <Menu
-                anchorEl={profileMenu}
-                open={openProfile}
-                onClose={handleProfileClose}
-                PaperProps={{
-                  sx: {
-                    background: "rgba(0,0,0,0.85)",
-                    backdropFilter: "blur(10px)",
-                    color: "white"
-                  }
-                }}
-              >
-                <MenuItem
-                  onClick={() => {
-                    handleProfileClose();
-                    navigate("/dashboard");
-                  }}
-                >
-                  Profile
-                </MenuItem>
+  <Button component={RouterLink} to="/member/profile" sx={{ color: "white" }}>
+    Profile
+  </Button>
 
-                <MenuItem
-                  onClick={() => {
-                    handleProfileClose();
-                    navigate("/classes");
-                  }}
-                >
-                  My Classes
-                </MenuItem>
+  {/* NOTIFICATIONS */}
+  <IconButton onClick={handleNotifOpen} sx={{ color: "white" }}>
+    <Badge badgeContent={3} color="error">
+      <NotificationsIcon />
+    </Badge>
+  </IconButton>
 
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
-            </>
+  <Menu
+    anchorEl={notifMenu}
+    open={openNotif}
+    onClose={handleNotifClose}
+    PaperProps={{
+      sx: {
+        background: "rgba(0,0,0,0.85)",
+        backdropFilter: "blur(10px)",
+        color: "white"
+      }
+    }}
+  >
+    <MenuItem onClick={handleNotifClose}>New class added</MenuItem>
+    <MenuItem onClick={handleNotifClose}>Membership reminder</MenuItem>
+    <MenuItem onClick={handleNotifClose}>Trainer message</MenuItem>
+  </Menu>
+
+  {/* PROFILE DROPDOWN */}
+  <IconButton onClick={handleProfileOpen}>
+    <Avatar
+      src={user.photoURL || ""}
+      sx={{
+        bgcolor: "#00e5ff",
+        color: "black",
+        fontWeight: 700
+      }}
+    >
+      {!user.photoURL && user.email?.charAt(0).toUpperCase()}
+    </Avatar>
+  </IconButton>
+
+  <Menu
+    anchorEl={profileMenu}
+    open={openProfile}
+    onClose={handleProfileClose}
+    PaperProps={{
+      sx: {
+        background: "rgba(0,0,0,0.85)",
+        backdropFilter: "blur(10px)",
+        color: "white"
+      }
+    }}
+  >
+    <MenuItem
+      onClick={() => {
+        handleProfileClose();
+        navigate("/member/profile");
+      }}
+    >
+      Profile
+    </MenuItem>
+
+    <MenuItem
+      onClick={() => {
+        handleProfileClose();
+        navigate("/member/editprofile");
+      }}
+    >
+      Edit Profile
+    </MenuItem>
+
+    <MenuItem
+      onClick={() => {
+        handleProfileClose();
+        navigate("/member/updateprofile");
+      }}
+    >
+      Update Picture
+    </MenuItem>
+
+    <MenuItem
+      onClick={() => {
+        handleProfileClose();
+        navigate("/member/deleteaccount");
+      }}
+    >
+      Delete Account
+    </MenuItem>
+
+    <MenuItem onClick={handleLogout}>Logout</MenuItem>
+  </Menu>
+</>
+
           )}
         </Box>
 

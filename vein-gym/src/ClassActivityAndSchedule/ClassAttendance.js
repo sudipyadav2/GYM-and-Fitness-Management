@@ -4,7 +4,9 @@ import { useAuth } from "../AuthContext";
 import {
   collection,
   getDocs,
-  addDoc,
+  doc,
+  getDoc,
+  setDoc,
   query,
   where
 } from "firebase/firestore";
@@ -13,35 +15,50 @@ export default function ClassAttendance() {
   const { user } = useAuth();
   const [registrations, setRegistrations] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [attendance, setAttendance] = useState([]);
-
-  const fetchData = async () => {
-    const regQ = query(
-      collection(db, "classRegistrations"),
-      where("userId", "==", user.uid)
-    );
-    const regSnap = await getDocs(regQ);
-
-    const classSnap = await getDocs(collection(db, "classes"));
-    const attSnap = await getDocs(collection(db, "classAttendance"));
-
-    setRegistrations(regSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
-    setClasses(classSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
-    setAttendance(attSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
-  };
+  const [attendance, setAttendance] = useState({});
 
   useEffect(() => {
+    const fetchData = async () => {
+      // 1. Get user registrations
+      const regQ = query(
+        collection(db, "classRegistrations"),
+        where("userId", "==", user.uid)
+      );
+      const regSnap = await getDocs(regQ);
+      const regList = regSnap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      setRegistrations(regList);
+
+      // 2. Get all classes
+      const classSnap = await getDocs(collection(db, "classes"));
+      setClasses(classSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
+
+      // 3. Load attendance for each class
+      let attData = {};
+      for (let reg of regList) {
+        const attRef = doc(db, "classAttendance", reg.classId);
+        const attSnap = await getDoc(attRef);
+        attData[reg.classId] = attSnap.exists() ? attSnap.data() : {};
+      }
+      setAttendance(attData);
+    };
+
     fetchData();
-  }, []);
+  }, [user.uid]);
 
   const markAttendance = async (classId) => {
-    await addDoc(collection(db, "classAttendance"), {
-      classId,
-      userId: user.uid,
-      date: new Date().toLocaleDateString()
-    });
+    await setDoc(
+      doc(db, "classAttendance", classId),
+      { [user.uid]: true },
+      { merge: true }
+    );
 
-    fetchData();
+    // refresh attendance
+    const attRef = doc(db, "classAttendance", classId);
+    const attSnap = await getDoc(attRef);
+    setAttendance((prev) => ({
+      ...prev,
+      [classId]: attSnap.exists() ? attSnap.data() : {}
+    }));
   };
 
   return (
@@ -51,19 +68,19 @@ export default function ClassAttendance() {
       <ul>
         {registrations.map((reg) => {
           const cls = classes.find((c) => c.id === reg.classId);
-          const attended = attendance.filter(
-            (a) => a.classId === reg.classId && a.userId === user.uid
-          );
+          const attended = attendance[reg.classId]?.[user.uid] ? 1 : 0;
 
           return (
             <li key={reg.id} style={{ marginTop: "15px" }}>
               <strong>{cls?.name}</strong>
 
-              <p>Attendance Count: {attended.length}</p>
+              <p>Attendance: {attended ? "Present" : "Not Marked"}</p>
 
-              <button onClick={() => markAttendance(reg.classId)}>
-                Mark Attendance
-              </button>
+              {!attended && (
+                <button onClick={() => markAttendance(reg.classId)}>
+                  Mark Attendance
+                </button>
+              )}
             </li>
           );
         })}

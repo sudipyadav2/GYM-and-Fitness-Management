@@ -1,12 +1,24 @@
-import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
+import { Button, Container, Grid, Paper, Typography } from "@mui/material";
 import Parallax from "../ParallaxTheme/Parallax";
 import Trad from "../BackgroundImage/Trad.jpeg";
 import R from "../BackgroundImage/R.jpg";
 import Girl from "../BackgroundImage/Girl.jpg";
-import Navbar from "../Componenet/Navbar";
-import Footer from "../Componenet/Footer";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { db } from "../Firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function Homepage() {
+  const [trainers, setTrainers] = useState([]);
+
+  useEffect(() => {
+    const load = async () => {
+      const snap = await getDocs(collection(db, "trainers"));
+      setTrainers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    };
+    load();
+  }, []);
+
   return (
     <>
      
@@ -19,7 +31,7 @@ export default function Homepage() {
             textShadow: "0 4px 20px rgba(0,0,0,0.8)"
           }}
         >
-          Transform Your Body
+          Transform Your Body with Vein Gym
         </Typography>
 
         <Typography
@@ -45,7 +57,7 @@ export default function Homepage() {
         </Button>
       </Parallax>
 
-      
+    
       <Container sx={{ py: 10 }}>
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 4, textAlign: "center" }}>
           Why Choose Us
@@ -79,7 +91,7 @@ export default function Homepage() {
         </Grid>
       </Container>
 
-   
+     
       <Parallax image={Girl} height="70vh">
         <Typography variant="h3" sx={{ fontWeight: 700, color: "white" }}>
           Explore Our Classes
@@ -97,37 +109,47 @@ export default function Homepage() {
         </Button>
       </Parallax>
 
-     
       <Container sx={{ py: 10 }}>
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 4, textAlign: "center" }}>
           Meet Our Trainers
         </Typography>
 
         <Grid container spacing={4}>
-          {[1, 2, 3].map((trainer) => (
-            <Grid item xs={12} md={4} key={trainer}>
-              <Paper
-                elevation={3}
-                sx={{
-                  p: 4,
-                  textAlign: "center",
-                  background: "rgba(255,255,255,0.05)",
-                  backdropFilter: "blur(10px)"
-                }}
-              >
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Trainer {trainer}
-                </Typography>
-                <Typography sx={{ mt: 1, color: "#B3B3B3" }}>
-                  Strength • Conditioning • Mobility
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
+          {trainers.length === 0 ? (
+            <Typography sx={{ textAlign: "center", width: "100%", color: "#aaa" }}>
+              No trainers added yet.
+            </Typography>
+          ) : (
+            trainers.slice(0, 3).map((t) => (
+              <Grid item xs={12} md={4} key={t.id}>
+                <Link to={`/trainer/${t.id}`} style={{ textDecoration: "none" }}>
+                  <Paper
+                    elevation={3}
+                    sx={{
+                      p: 4,
+                      textAlign: "center",
+                      background: "rgba(255,255,255,0.05)",
+                      backdropFilter: "blur(10px)",
+                      cursor: "pointer",
+                      transition: "0.3s",
+                      "&:hover": { transform: "translateY(-5px)" }
+                    }}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                      {t.name}
+                    </Typography>
+                    <Typography sx={{ mt: 1, color: "#B3B3B3" }}>
+                      {(t.skills || []).join(" • ") || "Strength • Conditioning • Mobility"}
+                    </Typography>
+                  </Paper>
+                </Link>
+              </Grid>
+            ))
+          )}
         </Grid>
       </Container>
 
-      
+     
       <Parallax image={Trad} height="60vh">
         <Typography variant="h3" sx={{ fontWeight: 700, color: "white" }}>
           Train With the Best
@@ -141,9 +163,6 @@ export default function Homepage() {
           Meet Trainers
         </Button>
       </Parallax>
-
-    
-    
     </>
   );
 }

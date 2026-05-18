@@ -12,7 +12,7 @@ export default function Footer() {
       }}
     >
       <Typography sx={{ color: "#B3B3B3" }}>
-        © {new Date().getFullYear()} Premium Gym. All rights reserved.
+        © {new Date().getFullYear()} Vein Gym. All rights reserved.
       </Typography>
     </Box>
   );
