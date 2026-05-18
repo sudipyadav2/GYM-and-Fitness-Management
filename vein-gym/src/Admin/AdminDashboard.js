@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 
 export default function AdminDashboard() {
   return (
-    <Container sx={{ mt: 6, mb: 6 }}>
+    <Container sx={{ mt: 10, mb: 6 }}>
       {/* HEADER */}
       <Box
         sx={{
@@ -163,6 +163,17 @@ export default function AdminDashboard() {
             <TileButton to="/admin/trainer-hours" color="#0077ff" />
           </Paper>
         </Grid>
+
+         {/* Membership Plans */}
+        <Grid item xs={12} md={4}>
+          <Paper elevation={4} sx={tileStyle}>
+            <AccessTimeIcon sx={iconBlue} />
+            <TileTitle>Membership Plans and Billing</TileTitle>
+            <TileDesc>Add and Delete Membership Plan.</TileDesc>
+            <TileButton to="/admin/membership-plans" color="#0077ff" />
+          </Paper>
+        </Grid>
+
 
       </Grid>
     </Container>

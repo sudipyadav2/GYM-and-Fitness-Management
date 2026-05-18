@@ -1,3 +1,4 @@
+
 .App {
   text-align: center;
 }
@@ -39,5 +40,20 @@
 
 .page-wrapper {
   min-height: 100vh;
-  padding-top: 90px; /* Adjust based on your navbar height */
+  padding-top: 120px;   
+  box-sizing: border-box;
+}
+
+
+.page-wrapper > * {
+  margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+  .page-wrapper {
+    padding-top: 90px;
+  }
+  .page-wrapper > * {
+    margin-top: 20px;
+  }
 }

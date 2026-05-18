@@ -50,19 +50,19 @@ export default function Editprofile() {
 
         <TextField label="Name" name="name" fullWidth margin="normal"
           value={form.name} onChange={handleChange}
-          InputLabelProps={{ style: { color: "#ccc" } }}
+          InputLabelProps={{ style: { color: "#090909" } }}
           InputProps={{ style: { color: "white" } }}
         />
 
         <TextField label="Phone" name="phone" fullWidth margin="normal"
           value={form.phone} onChange={handleChange}
-          InputLabelProps={{ style: { color: "#ccc" } }}
+          InputLabelProps={{ style: { color: "#090909" } }}
           InputProps={{ style: { color: "white" } }}
         />
 
         <TextField label="Address" name="address" fullWidth margin="normal" multiline rows={3}
           value={form.address} onChange={handleChange}
-          InputLabelProps={{ style: { color: "#ccc" } }}
+          InputLabelProps={{ style: { color: "#090909" } }}
           InputProps={{ style: { color: "white" } }}
         />
 

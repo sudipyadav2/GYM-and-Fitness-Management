@@ -13,15 +13,15 @@ export default function Homepage() {
 
   useEffect(() => {
     const load = async () => {
-      const snap = await getDocs(collection(db, "trainers"));
-      setTrainers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      const trainerSnap = await getDocs(collection(db, "trainers"));
+      setTrainers(trainerSnap.docs.map(d => ({ id: d.id, ...d.data() })));
     };
     load();
   }, []);
 
   return (
     <>
-     
+      {/* HERO */}
       <Parallax image={R} height="100vh">
         <Typography
           variant="h2"
@@ -57,7 +57,7 @@ export default function Homepage() {
         </Button>
       </Parallax>
 
-    
+      {/* WHY CHOOSE US */}
       <Container sx={{ py: 10 }}>
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 4, textAlign: "center" }}>
           Why Choose Us
@@ -91,24 +91,49 @@ export default function Homepage() {
         </Grid>
       </Container>
 
-     
+      {/* MEMBERSHIP PLANS PARALLAX  */}
       <Parallax image={Girl} height="70vh">
-        <Typography variant="h3" sx={{ fontWeight: 700, color: "white" }}>
-          Explore Our Classes
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: 700,
+            color: "white",
+            textShadow: "0 4px 20px rgba(0,0,0,0.8)"
+          }}
+        >
+          Membership Plans
         </Typography>
-        <Typography sx={{ mt: 2, color: "#B3B3B3" }}>
-          Yoga • HIIT • Strength • Cardio • Boxing
+
+        <Typography
+          sx={{
+            mt: 2,
+            color: "#B3B3B3",
+            maxWidth: "600px",
+            margin: "0 auto"
+          }}
+        >
+          Choose the perfect plan for your fitness journey
         </Typography>
+
         <Button
           variant="contained"
-          color="secondary"
-          sx={{ mt: 4 }}
-          href="/classes"
+          sx={{
+            mt: 4,
+            px: 4,
+            py: 1.5,
+            background: "#00E5FF",
+            color: "#000",
+            fontWeight: 700,
+            borderRadius: "12px",
+            "&:hover": { background: "#00BBD4" }
+          }}
+          href="/membership-plans"
         >
-          View Classes
+          View Plans
         </Button>
       </Parallax>
 
+      {/* TRAINERS */}
       <Container sx={{ py: 10 }}>
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 4, textAlign: "center" }}>
           Meet Our Trainers
@@ -149,7 +174,7 @@ export default function Homepage() {
         </Grid>
       </Container>
 
-     
+      {/* FINAL PARALLAX */}
       <Parallax image={Trad} height="60vh">
         <Typography variant="h3" sx={{ fontWeight: 700, color: "white" }}>
           Train With the Best

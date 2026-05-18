@@ -31,8 +31,8 @@ export default function Dashboard() {
   }, [user.uid]);
 
   return (
-    <Container sx={{ mt: 6, mb: 6 }}>
-      {/* HEADER WITH PROFILE PICTURE */}
+    <Container sx={{ mt: 10, mb: 6 }}>
+      
       <Box
         sx={{
           background: "linear-gradient(135deg, #00e5ff, #0077ff)",

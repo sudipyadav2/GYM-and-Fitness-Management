@@ -61,7 +61,7 @@ export default function Classes() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px",marginTop: "40px" }}>
       <h2>Manage Classes</h2>
 
       <div>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { db } from "../Firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
+import { useAuth } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Paper,
@@ -12,6 +14,8 @@ import {
 
 export default function MembershipPlans() {
   const [plans, setPlans] = useState([]);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const load = async () => {
@@ -20,6 +24,28 @@ export default function MembershipPlans() {
     };
     load();
   }, []);
+
+  const handleSubscribe = async (plan) => {
+    if (!user) return alert("Please login first");
+
+    const userRef = doc(db, "users", user.uid);
+
+    const nextMonth = new Date();
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+    await updateDoc(userRef, {
+      membership: {
+        planId: plan.id,
+        planName: plan.name,
+        price: plan.price,
+        status: "pending_payment",
+        renewalDate: nextMonth.toISOString().slice(0, 10)
+      }
+    });
+
+
+    navigate("/payment-method", { state: { plan } });
+  };
 
   return (
     <Container sx={{ mt: 10 }}>
@@ -59,7 +85,7 @@ export default function MembershipPlans() {
               }
             }}
           >
-            <Typography variant="h4" sx={{ fontWeight: 700, color: "#fff" }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: "#2e06e0" }}>
               {plan.name}
             </Typography>
 
@@ -71,7 +97,7 @@ export default function MembershipPlans() {
             </Typography>
 
             <Box sx={{ mt: 2 }}>
-              {plan.features.map((f, i) => (
+              {plan.features?.map((f, i) => (
                 <Chip
                   key={i}
                   label={f}
@@ -96,6 +122,7 @@ export default function MembershipPlans() {
                 borderRadius: "12px",
                 "&:hover": { background: "#00BBD4" }
               }}
+              onClick={() => handleSubscribe(plan)}
             >
               Subscribe
             </Button>

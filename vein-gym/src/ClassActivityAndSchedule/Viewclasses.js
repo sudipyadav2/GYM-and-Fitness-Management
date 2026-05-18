@@ -31,7 +31,7 @@ export default function ViewClasses() {
     categories.find((c) => c.name === name) || {};
 
   return (
-    <div style={{ padding: "30px" }}>
+    <div style={{ padding: "30px", marginTop: "40px" }}>
       <h2 style={{ marginBottom: "20px" }}>All Classes</h2>
 
       {/* FILTER */}

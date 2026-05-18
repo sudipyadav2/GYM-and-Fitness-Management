@@ -57,7 +57,7 @@ export default function Schedule() {
   };
 
   return (
-    <div style={{ padding: "30px" }}>
+    <div style={{ padding: "30px", marginTop: "40px" }}>
       <h2 style={{ marginBottom: "20px" }}>Manage Class Schedule</h2>
 
       {/* ADD SCHEDULE FORM */}

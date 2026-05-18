@@ -36,6 +36,14 @@ import AssignTrainer from "./AssignTrainerandTrack/assigntrainer";
 import TrackTrainerHours from "./AssignTrainerandTrack/Tracktrainer";
 import TrainerListPage from "./AssignTrainerandTrack/TrainerListPage";
 import AddTrainer from "./AssignTrainerandTrack/AddTrainer";
+
+import MembershipPlans from "./Membership/MembershipPlans";
+import UpgradeMembership from "./Membership/UpgradeMembership";
+import PaymentMethod from "./Membership/PaymentMethod";
+import MembershipStatus from "./Membership/MembershipStatus";
+import BillingHistory from "./Membership/BillingHistory";
+import CancelMembership from "./Membership/CancelMembership";
+import AdminMembershipPlans from "./Membership/AdminMembershipPlans";
 function AppContent() {
   const location = useLocation();
   return (
@@ -52,6 +60,7 @@ function AppContent() {
      
           <Route path="/register" element={<MemberRegistration />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           <Route
             path="/dashboard"
@@ -240,6 +249,70 @@ function AppContent() {
     </AdminRoute>
   }
 />
+<Route
+  path="/membership/plans"
+  element={
+    <ProtectedRoute>
+      <MembershipPlans />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/membership/status"
+  element={
+    <ProtectedRoute>
+      <MembershipStatus />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/membership/upgrade"
+  element={
+    <ProtectedRoute>
+      <UpgradeMembership />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/membership/cancel"
+  element={
+    <ProtectedRoute>
+      <CancelMembership />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/membership/payment"
+  element={
+    <ProtectedRoute>
+      <PaymentMethod />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/membership/billing"
+  element={
+    <ProtectedRoute>
+      <BillingHistory />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin/membership-plans"
+  element={
+    <AdminRoute>
+      <AdminMembershipPlans />
+    </AdminRoute>
+  }
+/>
+
+
 
          
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -94,7 +94,7 @@ export default function ClassCategories() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px",marginTop: "40px" }}>
       <h2>Manage Class Categories</h2>
 
       {/* ADD CATEGORY FORM */}
