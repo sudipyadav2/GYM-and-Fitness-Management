@@ -123,7 +123,7 @@ export default function ClassRegistration() {
   if (!classInfo || !category) return <p>Loading...</p>;
 
   return (
-    <div style={{ padding: "30px", maxWidth: "700px", margin: "auto" }}>
+    <div style={{ padding: "30px", maxWidth: "700px", margin: "auto", marginTop: "40px" }}>
       {/* IMAGE */}
       <img
         src={category.image}

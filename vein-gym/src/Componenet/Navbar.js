@@ -148,7 +148,7 @@ export default function Navbar() {
               </Button>
 
               <Button component={RouterLink} to="/class/notifications" sx={{ color: "white" }}>
-                Alerts
+                Notifications
               </Button>
 
               {/* MEMBERSHIP DROPDOWN */}
@@ -198,12 +198,7 @@ export default function Navbar() {
                 Profile
               </Button>
 
-              {/* NOTIFICATIONS */}
-              <IconButton onClick={handleNotifOpen} sx={{ color: "white" }}>
-                <Badge badgeContent={3} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
+             
 
               <Menu
                 anchorEl={notifMenu}

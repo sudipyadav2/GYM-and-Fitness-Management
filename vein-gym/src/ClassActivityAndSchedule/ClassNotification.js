@@ -28,7 +28,7 @@ export default function ClassNotifications() {
   }, [user.uid]);
 
   return (
-    <div style={{ padding: "30px", maxWidth: "800px", margin: "auto" }}>
+    <div style={{ padding: "30px", maxWidth: "800px", marginTop: "40 px" }}>
       <h2 style={{ marginBottom: "20px" }}>Notifications</h2>
 
       {notifications.length === 0 && <p>No notifications yet.</p>}
